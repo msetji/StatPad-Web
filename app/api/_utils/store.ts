@@ -6,12 +6,14 @@ interface WaitlistEntry {
   name: string;
   email: string;
   source: string;
+  [key: string]: unknown;
 }
 
 interface ContactMessage {
   name: string;
   email: string;
   message: string;
+  [key: string]: unknown;
 }
 
 // Initialize Supabase client if env vars are provided
