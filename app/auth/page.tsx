@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import Button from '@/components/ui/button';
 import Input from '@/components/ui/input';
@@ -10,7 +11,36 @@ export default function AuthPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const searchParams = useSearchParams();
   const supabase = createClient();
+
+  useEffect(() => {
+    const error = searchParams.get('error');
+    const details = searchParams.get('details');
+    
+    if (error) {
+      console.log('Auth error from URL:', error, details);
+      let message = '';
+      switch (error) {
+        case 'exchange_failed':
+          message = `Authentication failed: ${details || 'Code exchange error'}`;
+          break;
+        case 'no_session':
+          message = 'Authentication successful but no session created';
+          break;
+        case 'no_code':
+          message = 'No authorization code received';
+          break;
+        case 'auth_failed':
+          message = 'Authentication failed';
+          break;
+        default:
+          message = `Authentication error: ${error}`;
+      }
+      setErrorMessage(message);
+    }
+  }, [searchParams]);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,7 +74,7 @@ export default function AuthPage() {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       
@@ -87,6 +117,12 @@ export default function AuthPage() {
               required
             />
           </div>
+
+          {errorMessage && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              {errorMessage}
+            </div>
+          )}
 
           <div className="space-y-4">
             <Button 
