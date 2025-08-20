@@ -26,14 +26,7 @@ export default function Following({ user }: FollowingProps) {
       try {
         const { data, error } = await supabase
           .from('follows')
-          .select(`
-            following_id,
-            created_at,
-            following_user:auth.users!follows_following_id_fkey (
-              id,
-              email
-            )
-          `)
+          .select('following_id, created_at')
           .eq('follower_id', user.id)
           .order('created_at', { ascending: false });
 
@@ -42,7 +35,7 @@ export default function Following({ user }: FollowingProps) {
         } else {
           const formattedData = data?.map(follow => ({
             id: follow.following_id,
-            email: follow.following_user?.email || 'Unknown',
+            email: 'User', // Simplified for now since we can't easily join auth.users
             followedAt: follow.created_at
           })) || [];
           setFollowing(formattedData);
