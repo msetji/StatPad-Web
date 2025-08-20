@@ -4,7 +4,7 @@ import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
 import { ReactNode } from 'react';
 
-type TabType = 'overview' | 'stats' | 'posts' | 'following' | 'settings' | 'new-post';
+type TabType = 'overview' | 'feed' | 'stats' | 'posts' | 'following' | 'settings' | 'new-post';
 
 interface DashboardLayoutProps {
   user: User | null;
@@ -23,6 +23,7 @@ export default function DashboardLayout({
 }: DashboardLayoutProps) {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: '📊' },
+    { id: 'feed', label: 'Feed', icon: '🏀' },
     { id: 'stats', label: 'Stats', icon: '📈' },
     { id: 'posts', label: 'Posts', icon: '📱' },
     { id: 'following', label: 'Following', icon: '👥' },

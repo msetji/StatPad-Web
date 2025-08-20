@@ -5,13 +5,14 @@ import { createClient } from '@/lib/supabase';
 import { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/dashboard/DashboardLayout';
 import Overview from '@/components/dashboard/Overview';
+import Feed from '@/components/dashboard/Feed';
 import Stats from '@/components/dashboard/Stats';
 import Posts from '@/components/dashboard/Posts';
 import Following from '@/components/dashboard/Following';
 import Settings from '@/components/dashboard/Settings';
 import NewPost from '@/components/dashboard/NewPost';
 
-type TabType = 'overview' | 'stats' | 'posts' | 'following' | 'settings' | 'new-post';
+type TabType = 'overview' | 'feed' | 'stats' | 'posts' | 'following' | 'settings' | 'new-post';
 
 export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -50,6 +51,8 @@ export default function DashboardPage() {
     switch (activeTab) {
       case 'overview':
         return <Overview user={user} />;
+      case 'feed':
+        return <Feed user={user} />;
       case 'stats':
         return <Stats user={user} />;
       case 'posts':

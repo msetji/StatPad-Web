@@ -11,7 +11,9 @@ interface Post {
   rebounds: number;
   assists: number;
   steals: number;
-  description: string;
+  body: string;
+  file: string | null;
+  thumbnail_url: string | null;
   created_at: string;
 }
 
@@ -126,9 +128,28 @@ export default function Posts({ user }: PostsProps) {
                 </div>
               </div>
 
-              {post.description && (
+              {post.file && (
+                <div className="border-t pt-4 mb-4">
+                  {post.file.includes('.mp4') || post.file.includes('.mov') || post.file.includes('.avi') ? (
+                    <video
+                      src={post.file}
+                      controls
+                      className="w-full max-w-md rounded-lg"
+                      poster={post.thumbnail_url || undefined}
+                    />
+                  ) : (
+                    <img
+                      src={post.file}
+                      alt="Post media"
+                      className="w-full max-w-md rounded-lg object-cover"
+                    />
+                  )}
+                </div>
+              )}
+
+              {post.body && (
                 <div className="border-t pt-4">
-                  <p className="text-gray-700">{post.description}</p>
+                  <p className="text-gray-700">{post.body}</p>
                 </div>
               )}
             </div>
