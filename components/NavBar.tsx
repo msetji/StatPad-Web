@@ -35,7 +35,7 @@ export default function NavBar() {
         {/* Login Button */}
         <div className="flex items-center space-x-4">
           <a href="/auth" className="no-underline">
-            <Button variant="default" size="sm">Login</Button>
+            <Button variant="default">Login</Button>
           </a>
         </div>
       </div>
