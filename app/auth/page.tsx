@@ -20,7 +20,6 @@ export default function AuthPage() {
     const details = searchParams.get('details');
     
     if (error) {
-      console.log('Auth error from URL:', error, details);
       let message = '';
       switch (error) {
         case 'exchange_failed':
@@ -79,11 +78,9 @@ export default function AuthPage() {
       });
       
       if (error) {
-        console.error('Google auth error:', error);
         alert(error.message);
       }
     } catch (err) {
-      console.error('Auth error:', err);
       alert('Authentication failed. Please try again.');
     }
   };
