@@ -9,19 +9,17 @@ interface Stat {
 
 interface StatsData {
   waitlistCount: number;
-  gamesCount: number;
+  betaUsersCount: number;
   clipsCount: number;
-  badgesCount: number;
 }
 
 export default function StatsStrip() {
   const [realStats, setRealStats] = useState<StatsData>({
     waitlistCount: 0,
-    gamesCount: 0,
+    betaUsersCount: 0,
     clipsCount: 0,
-    badgesCount: 0,
   });
-  const [counts, setCounts] = useState([0, 0, 0, 0]);
+  const [counts, setCounts] = useState([0, 0, 0]);
 
   // Fetch real stats from API
   useEffect(() => {
@@ -35,9 +33,8 @@ export default function StatsStrip() {
 
   const stats: Stat[] = [
     { label: 'Players on Waitlist', value: realStats.waitlistCount },
-    { label: 'Games Recorded', value: realStats.gamesCount },
+    { label: 'Beta Users', value: realStats.betaUsersCount },
     { label: 'Clips Shared', value: realStats.clipsCount },
-    { label: 'Badges Earned', value: realStats.badgesCount },
   ];
 
   // Animate counters
@@ -56,7 +53,7 @@ export default function StatsStrip() {
 
   return (
     <section className="py-12 bg-primary/5" id="stats">
-      <div className="container mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
         {stats.map((stat, i) => (
           <div key={stat.label} className="flex flex-col items-center">
             <span className="text-4xl font-bold text-primary">

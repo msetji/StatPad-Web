@@ -1,11 +1,18 @@
 import Button from '@/components/ui/button';
+import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <section className="w-full py-24 md:py-32 bg-white text-center flex flex-col items-center px-6">
-      {/* Temp logo */}
-      <div className="w-20 h-20 mb-6 flex items-center justify-center rounded-full bg-primary text-white text-4xl font-bold">
-        SP
+    <section className="w-full py-24 md:py-32 text-center flex flex-col items-center px-6" style={{backgroundColor: '#FFF9F0'}}>
+      {/* StatPad Logo */}
+      <div className="w-20 h-20 mb-6 flex items-center justify-center">
+        <Image 
+          src="/logos/icon.png" 
+          alt="StatPad Logo" 
+          width={80} 
+          height={80}
+          className="rounded-lg"
+        />
       </div>
       <h1 className="text-4xl md:text-6xl font-extrabold mb-4 max-w-3xl">
         Track your game with <span className="text-primary">StatPad</span>

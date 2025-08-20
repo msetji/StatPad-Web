@@ -40,21 +40,18 @@ async function getSupabaseStats() {
     // Get all stats in parallel
     const [
       { count: waitlistCount },
-      { count: gamesCount },
-      { count: clipsCount },
-      { count: badgesCount }
+      { count: betaUsersCount },
+      { count: clipsCount }
     ] = await Promise.all([
       supabase.from('waitlist').select('*', { count: 'exact', head: true }),
-      supabase.from('games').select('*', { count: 'exact', head: true }),
-      supabase.from('clips').select('*', { count: 'exact', head: true }),
-      supabase.from('user_badges').select('*', { count: 'exact', head: true })
+      supabase.from('users').select('*', { count: 'exact', head: true }),
+      supabase.from('posts').select('*', { count: 'exact', head: true })
     ]);
     
     return {
       waitlistCount: waitlistCount || 0,
-      gamesCount: gamesCount || 0,
+      betaUsersCount: betaUsersCount || 0,
       clipsCount: clipsCount || 0,
-      badgesCount: badgesCount || 0,
     };
   } catch (error) {
     console.error('Error fetching Supabase stats:', error);
@@ -70,9 +67,8 @@ export async function GET() {
     
     const stats = {
       waitlistCount: supabaseStats?.waitlistCount ?? localStats.waitlistCount,
-      gamesCount: 0, // Add when you have games table
-      clipsCount: 0, // Add when you have clips table  
-      badgesCount: 0, // Add when you have badges table
+      betaUsersCount: supabaseStats?.betaUsersCount ?? 0,
+      clipsCount: supabaseStats?.clipsCount ?? 0,
     };
     
     return NextResponse.json(stats);

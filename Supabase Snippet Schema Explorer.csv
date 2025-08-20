@@ -1,0 +1,151 @@
+table_name,column_name,data_type
+badge_types,id,bigint
+badge_types,name,text
+badge_types,description,text
+badge_types,icon,text
+badge_types,rarity,text
+badge_types,requirements,jsonb
+badge_types,created_at,timestamp with time zone
+blocked_users,id,uuid
+blocked_users,username,text
+blocked_users,name,text
+blocked_users,blocked_at,timestamp without time zone
+clips,id,bigint
+clips,game_id,bigint
+clips,user_id,uuid
+clips,title,text
+clips,duration_seconds,integer
+clips,view_count,integer
+clips,is_public,boolean
+clips,metadata,jsonb
+clips,created_at,timestamp with time zone
+comments,id,bigint
+comments,created_at,timestamp with time zone
+comments,postId,bigint
+comments,userId,uuid
+comments,text,text
+contact_messages,id,bigint
+contact_messages,name,text
+contact_messages,email,text
+contact_messages,message,text
+contact_messages,created_at,timestamp with time zone
+conversations,id,uuid
+conversations,participant1,uuid
+conversations,participant2,uuid
+conversations,created_at,timestamp with time zone
+conversations,updated_at,timestamp with time zone
+follows,id,uuid
+follows,follower_id,uuid
+follows,following_id,uuid
+follows,created_at,timestamp with time zone
+games,id,bigint
+games,user_id,uuid
+games,game_title,text
+games,duration_seconds,integer
+games,score,integer
+games,metadata,jsonb
+games,created_at,timestamp with time zone
+messages,id,uuid
+messages,conversation_id,uuid
+messages,sender_id,uuid
+messages,content,text
+messages,created_at,timestamp with time zone
+notification_settings,id,uuid
+notification_settings,user_id,uuid
+notification_settings,likes_enabled,boolean
+notification_settings,comments_enabled,boolean
+notification_settings,follows_enabled,boolean
+notification_settings,created_at,timestamp with time zone
+notification_settings,updated_at,timestamp with time zone
+notifications,id,bigint
+notifications,created_at,timestamp with time zone
+notifications,senderId,uuid
+notifications,receiverId,uuid
+notifications,data,text
+notifications,title,text
+notifications,commentId,bigint
+postLikes,id,bigint
+postLikes,created_at,timestamp with time zone
+postLikes,postId,bigint
+postLikes,userId,uuid
+posts,id,bigint
+posts,created_at,timestamp with time zone
+posts,body,text
+posts,file,text
+posts,userId,uuid
+posts,points,smallint
+posts,rebounds,smallint
+posts,assists,smallint
+posts,steals,smallint
+posts,blocks,smallint
+posts,threePM,smallint
+posts,teamId,bigint
+posts,winLoss,text
+posts,teamScore,smallint
+posts,opponentScore,smallint
+posts,stat1,jsonb
+posts,stat2,jsonb
+posts,stat3,jsonb
+posts,isPublic,boolean
+posts,yards,integer
+posts,touchdowns,integer
+posts,receptions,integer
+posts,tackles,integer
+posts,interceptions,integer
+posts,sacks,integer
+posts,kills,integer
+posts,digs,integer
+posts,serveRecieve,text
+posts,thumbnail_url,text
+push_tokens,id,uuid
+push_tokens,user_id,uuid
+push_tokens,token,text
+push_tokens,device_type,text
+push_tokens,is_active,boolean
+push_tokens,created_at,timestamp with time zone
+push_tokens,updated_at,timestamp with time zone
+reports,id,uuid
+reports,post_id,bigint
+reports,reported_by,uuid
+reports,reason,text
+reports,description,text
+reports,status,text
+reports,created_at,timestamp without time zone
+teams,id,bigint
+teams,created_at,timestamp with time zone
+teams,name,text
+teams,userId,uuid
+user_badges,id,bigint
+user_badges,user_id,uuid
+user_badges,badge_type_id,bigint
+user_badges,earned_at,timestamp with time zone
+user_badges,progress,jsonb
+user_blocks,id,uuid
+user_blocks,blocker_id,uuid
+user_blocks,blocked_id,uuid
+user_blocks,created_at,timestamp without time zone
+user_preferences,id,uuid
+user_preferences,user_id,uuid
+user_preferences,has_seen_stats_onboarding,boolean
+user_preferences,created_at,timestamp with time zone
+user_preferences,updated_at,timestamp with time zone
+users,id,uuid
+users,created_at,timestamp with time zone
+users,name,text
+users,image,text
+users,bio,text
+users,email,text
+users,address,text
+users,phoneNumber,text
+users,ring_config,jsonb
+users,username,text
+users,sport,text
+users_who_blocked_me,id,uuid
+users_who_blocked_me,username,text
+users_who_blocked_me,name,text
+users_who_blocked_me,blocked_at,timestamp without time zone
+waitlist,id,bigint
+waitlist,name,text
+waitlist,email,text
+waitlist,source,text
+waitlist,created_at,timestamp with time zone

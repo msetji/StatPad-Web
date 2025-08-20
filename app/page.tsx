@@ -1,3 +1,4 @@
+import NavBar from '@/components/NavBar';
 import Hero from '@/components/Hero';
 import FeatureCards from '@/components/FeatureCards';
 import ScreenshotCarousel from '@/components/ScreenshotCarousel';
@@ -10,6 +11,7 @@ import Footer from '@/components/Footer';
 export default function HomePage() {
   return (
     <main className="flex flex-col items-center justify-center">
+      <NavBar />
       <Hero />
       <FeatureCards />
       <ScreenshotCarousel />
