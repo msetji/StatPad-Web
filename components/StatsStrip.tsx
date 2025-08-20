@@ -7,16 +7,40 @@ interface Stat {
   value: number;
 }
 
-const stats: Stat[] = [
-  { label: 'Players on Waitlist', value: 5000 },
-  { label: 'Games Recorded', value: 12000 },
-  { label: 'Clips Shared', value: 8000 },
-  { label: 'Badges Earned', value: 3200 },
-];
+interface StatsData {
+  waitlistCount: number;
+  gamesCount: number;
+  clipsCount: number;
+  badgesCount: number;
+}
 
 export default function StatsStrip() {
-  const [counts, setCounts] = useState(stats.map(() => 0));
+  const [realStats, setRealStats] = useState<StatsData>({
+    waitlistCount: 0,
+    gamesCount: 0,
+    clipsCount: 0,
+    badgesCount: 0,
+  });
+  const [counts, setCounts] = useState([0, 0, 0, 0]);
 
+  // Fetch real stats from API
+  useEffect(() => {
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then((data: StatsData) => {
+        setRealStats(data);
+      })
+      .catch(console.error);
+  }, []);
+
+  const stats: Stat[] = [
+    { label: 'Players on Waitlist', value: realStats.waitlistCount },
+    { label: 'Games Recorded', value: realStats.gamesCount },
+    { label: 'Clips Shared', value: realStats.clipsCount },
+    { label: 'Badges Earned', value: realStats.badgesCount },
+  ];
+
+  // Animate counters
   useEffect(() => {
     const interval = setInterval(() => {
       setCounts((prev) =>
@@ -28,7 +52,7 @@ export default function StatsStrip() {
       );
     }, 50);
     return () => clearInterval(interval);
-  }, []);
+  }, [realStats]);
 
   return (
     <section className="py-12 bg-primary/5" id="stats">
