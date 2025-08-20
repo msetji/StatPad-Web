@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface StatsProps {
   user: User | null;
@@ -20,9 +21,20 @@ interface UserProfile {
   avg_steals: number;
 }
 
+interface GameData {
+  game: number;
+  points: number;
+  rebounds: number;
+  assists: number;
+  steals: number;
+  date: string;
+}
+
 export default function Stats({ user }: StatsProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [gameData, setGameData] = useState<GameData[]>([]);
+  const [selectedStats, setSelectedStats] = useState<string[]>(['points', 'rebounds', 'assists', 'steals']);
   const supabase = createClient();
 
   useEffect(() => {
@@ -33,8 +45,9 @@ export default function Stats({ user }: StatsProps) {
         // Fetch user posts to calculate stats
         const { data: userPosts } = await supabase
           .from('posts')
-          .select('points, rebounds, assists, steals')
-          .eq('userId', user.id);
+          .select('points, rebounds, assists, steals, created_at')
+          .eq('userId', user.id)
+          .order('created_at', { ascending: false });
 
         if (!userPosts) {
           setProfile({
@@ -48,6 +61,7 @@ export default function Stats({ user }: StatsProps) {
             avg_assists: 0,
             avg_steals: 0,
           });
+          setGameData([]);
           setLoading(false);
           return;
         }
@@ -62,6 +76,16 @@ export default function Stats({ user }: StatsProps) {
 
         const gamesPlayed = userPosts.length;
 
+        // Prepare last 10 games data for line chart
+        const last10Games = userPosts.slice(0, 10).reverse().map((post, index) => ({
+          game: index + 1,
+          points: post.points || 0,
+          rebounds: post.rebounds || 0,
+          assists: post.assists || 0,
+          steals: post.steals || 0,
+          date: new Date(post.created_at).toLocaleDateString()
+        }));
+
         setProfile({
           games_played: gamesPlayed,
           total_points: totals.points,
@@ -73,6 +97,8 @@ export default function Stats({ user }: StatsProps) {
           avg_assists: gamesPlayed > 0 ? totals.assists / gamesPlayed : 0,
           avg_steals: gamesPlayed > 0 ? totals.steals / gamesPlayed : 0,
         });
+
+        setGameData(last10Games);
       } catch (error) {
         console.error('Error fetching user stats:', error);
       } finally {
@@ -105,6 +131,21 @@ export default function Stats({ user }: StatsProps) {
     { label: 'Avg Assists', value: profile?.avg_assists || 0, icon: '🤝' },
     { label: 'Avg Steals', value: profile?.avg_steals || 0, icon: '⚡' },
   ];
+
+  const statOptions = [
+    { key: 'points', label: 'Points', color: '#3B82F6' },
+    { key: 'rebounds', label: 'Rebounds', color: '#10B981' },
+    { key: 'assists', label: 'Assists', color: '#F59E0B' },
+    { key: 'steals', label: 'Steals', color: '#EF4444' },
+  ];
+
+  const handleStatToggle = (statKey: string) => {
+    setSelectedStats(prev => 
+      prev.includes(statKey) 
+        ? prev.filter(s => s !== statKey)
+        : [...prev, statKey]
+    );
+  };
 
   return (
     <div className="p-6">
@@ -151,13 +192,74 @@ export default function Stats({ user }: StatsProps) {
         </div>
       </div>
 
+      {/* Last 10 Games Trend */}
+      {gameData.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Last 10 Games Trend</h2>
+          
+          {/* Stat Selection Buttons */}
+          <div className="mb-4 flex flex-wrap gap-2">
+            {statOptions.map((stat) => (
+              <button
+                key={stat.key}
+                onClick={() => handleStatToggle(stat.key)}
+                className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                  selectedStats.includes(stat.key)
+                    ? 'text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+                style={{
+                  backgroundColor: selectedStats.includes(stat.key) ? stat.color : undefined
+                }}
+              >
+                {stat.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Line Chart */}
+          <div className="bg-white p-4 rounded-lg border border-gray-200">
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={gameData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="game" 
+                  label={{ value: 'Game', position: 'insideBottom', offset: -10 }}
+                />
+                <YAxis />
+                <Tooltip 
+                  formatter={(value, name) => [value, name]}
+                  labelFormatter={(label) => `Game ${label}`}
+                />
+                <Legend />
+                {statOptions.map((stat) => 
+                  selectedStats.includes(stat.key) && (
+                    <Line
+                      key={stat.key}
+                      type="monotone"
+                      dataKey={stat.key}
+                      stroke={stat.color}
+                      strokeWidth={2}
+                      dot={{ fill: stat.color, strokeWidth: 2, r: 4 }}
+                      name={stat.label}
+                    />
+                  )
+                )}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
       {/* Performance Insights */}
       <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
         <h3 className="font-semibold text-yellow-900 mb-2">💡 Performance Insights</h3>
         <p className="text-yellow-700 text-sm">
           {profile?.games_played === 0 
             ? "Start tracking your games to see detailed statistics and insights!"
-            : "Your stats are synced from the StatPad mobile app. Keep playing to improve your averages!"
+            : gameData.length > 0 
+              ? "Track your performance trends in the chart above. Click stat buttons to show/hide different metrics!"
+              : "Your stats are synced from the StatPad mobile app. Keep playing to improve your averages!"
           }
         </p>
       </div>
