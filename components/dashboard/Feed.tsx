@@ -86,7 +86,7 @@ export default function Feed({ user }: FeedProps) {
           .insert([{ postId, userId: user.id }]);
           
         if (!error) {
-          setLikedPosts(prev => new Set([...prev, postId]));
+          setLikedPosts(prev => new Set([...Array.from(prev), postId]));
         }
       }
     } catch (error) {
