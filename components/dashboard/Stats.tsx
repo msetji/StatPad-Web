@@ -38,6 +38,8 @@ export default function Stats({ user }: StatsProps) {
   const supabase = createClient();
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchUserStats = async () => {
       if (!user) return;
 
@@ -48,6 +50,8 @@ export default function Stats({ user }: StatsProps) {
           .select('points, rebounds, assists, steals, created_at')
           .eq('userId', user.id)
           .order('created_at', { ascending: false });
+
+        if (!isMounted) return;
 
         if (!userPosts) {
           setProfile({
@@ -86,6 +90,8 @@ export default function Stats({ user }: StatsProps) {
           date: new Date(post.created_at).toLocaleDateString()
         }));
 
+        if (!isMounted) return;
+
         setProfile({
           games_played: gamesPlayed,
           total_points: totals.points,
@@ -100,13 +106,21 @@ export default function Stats({ user }: StatsProps) {
 
         setGameData(last10Games);
       } catch (error) {
-        console.error('Error fetching user stats:', error);
+        if (isMounted) {
+          console.error('Error fetching user stats:', error);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchUserStats();
+
+    return () => {
+      isMounted = false;
+    };
   }, [user, supabase]);
 
   if (loading) {
@@ -219,34 +233,37 @@ export default function Stats({ user }: StatsProps) {
 
           {/* Line Chart */}
           <div className="bg-white p-4 rounded-lg border border-gray-200">
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={gameData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="game" 
-                  label={{ value: 'Game', position: 'insideBottom', offset: -10 }}
-                />
-                <YAxis />
-                <Tooltip 
-                  formatter={(value, name) => [value, name]}
-                  labelFormatter={(label) => `Game ${label}`}
-                />
-                <Legend />
-                {statOptions.map((stat) => 
-                  selectedStats.includes(stat.key) && (
-                    <Line
-                      key={stat.key}
-                      type="monotone"
-                      dataKey={stat.key}
-                      stroke={stat.color}
-                      strokeWidth={2}
-                      dot={{ fill: stat.color, strokeWidth: 2, r: 4 }}
-                      name={stat.label}
-                    />
-                  )
-                )}
-              </LineChart>
-            </ResponsiveContainer>
+            {gameData && gameData.length > 0 && (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={gameData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="game" 
+                    label={{ value: 'Game', position: 'insideBottom', offset: -10 }}
+                  />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value, name) => [value, name]}
+                    labelFormatter={(label) => `Game ${label}`}
+                  />
+                  <Legend />
+                  {statOptions.map((stat) => 
+                    selectedStats.includes(stat.key) && (
+                      <Line
+                        key={stat.key}
+                        type="monotone"
+                        dataKey={stat.key}
+                        stroke={stat.color}
+                        strokeWidth={2}
+                        dot={{ fill: stat.color, strokeWidth: 2, r: 4 }}
+                        name={stat.label}
+                        connectNulls={false}
+                      />
+                    )
+                  )}
+                </LineChart>
+              </ResponsiveContainer>
+            )}
           </div>
         </div>
       )}
