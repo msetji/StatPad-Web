@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase';
+import { Basketball } from '@/components/icons';
 
 interface Post {
   id: string;
@@ -264,7 +265,9 @@ export default function Feed({ user }: FeedProps) {
 
       {posts.length === 0 && !loading ? (
         <div className="text-center py-12">
-          <div className="text-6xl mb-4">🏀</div>
+          <div className="mb-4 flex justify-center text-gray-400">
+            <Basketball size={64} />
+          </div>
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No posts yet</h3>
           <p className="text-gray-600 mb-4">Be the first to share your basketball highlights!</p>
         </div>
@@ -445,8 +448,9 @@ export default function Feed({ user }: FeedProps) {
 
           {!hasMore && posts.length > 0 && (
             <div className="text-center py-8">
-              <div className="text-gray-500 text-sm">
-                🏀 You've reached the end of the feed
+              <div className="text-gray-500 text-sm flex items-center justify-center gap-2">
+                <Basketball size={16} />
+                You've reached the end of the feed
               </div>
             </div>
           )}

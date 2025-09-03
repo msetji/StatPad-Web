@@ -2,7 +2,9 @@
 
 import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ReactNode } from 'react';
+import { Chart, Basketball, ChartLine, Smartphone, Users, Plus, Settings } from '@/components/icons';
 
 type TabType = 'overview' | 'feed' | 'stats' | 'posts' | 'following' | 'settings' | 'new-post';
 
@@ -22,13 +24,13 @@ export default function DashboardLayout({
   children,
 }: DashboardLayoutProps) {
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: '📊' },
-    { id: 'feed', label: 'Feed', icon: '🏀' },
-    { id: 'stats', label: 'Stats', icon: '📈' },
-    { id: 'posts', label: 'Posts', icon: '📱' },
-    { id: 'following', label: 'Following', icon: '👥' },
-    { id: 'new-post', label: 'New Post', icon: '➕' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
+    { id: 'overview', label: 'Overview', iconComponent: Chart },
+    { id: 'feed', label: 'Feed', iconComponent: Basketball },
+    { id: 'stats', label: 'Stats', iconComponent: ChartLine },
+    { id: 'posts', label: 'Posts', iconComponent: Smartphone },
+    { id: 'following', label: 'Following', iconComponent: Users },
+    { id: 'new-post', label: 'New Post', iconComponent: Plus },
+    { id: 'settings', label: 'Settings', iconComponent: Settings },
   ] as const;
 
   return (
@@ -36,7 +38,7 @@ export default function DashboardLayout({
       {/* Top Navigation */}
       <nav className="bg-white border-b border-gray-200">
         <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
             <Image 
               src="/logos/icon.png" 
               alt="StatPad Logo" 
@@ -45,7 +47,7 @@ export default function DashboardLayout({
               className="rounded"
             />
             <span className="text-xl font-bold text-gray-900">StatPad Dashboard</span>
-          </div>
+          </Link>
           
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-600">
@@ -67,20 +69,28 @@ export default function DashboardLayout({
           <div className="lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <nav className="space-y-2">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => onTabChange(tab.id as TabType)}
-                    className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md text-left transition-colors ${
-                      activeTab === tab.id
-                        ? 'bg-primary text-white'
-                        : 'text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    <span>{tab.icon}</span>
-                    <span className="font-medium">{tab.label}</span>
-                  </button>
-                ))}
+                {tabs.map((tab) => {
+                  const IconComponent = tab.iconComponent;
+                  const isActive = activeTab === tab.id;
+                  
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => onTabChange(tab.id as TabType)}
+                      className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md text-left transition-colors ${
+                        isActive
+                          ? 'bg-primary text-white'
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <IconComponent 
+                        size={20} 
+                        className={isActive ? 'text-white' : 'text-orange-500'} 
+                      />
+                      <span className="font-medium">{tab.label}</span>
+                    </button>
+                  );
+                })}
               </nav>
             </div>
           </div>

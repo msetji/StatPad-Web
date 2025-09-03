@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase';
+import { Basketball, Star, RefreshCcw, Handshake, Zap, Smartphone, Users, ArrowRight } from '@/components/icons';
 
 interface UserStats {
   gamesPlayed: number;
@@ -99,14 +100,14 @@ export default function Overview({ user }: OverviewProps) {
   }
 
   const statCards = [
-    { label: 'Games Played', value: stats.gamesPlayed, icon: '🏀' },
-    { label: 'Total Points', value: stats.points, icon: '⭐' },
-    { label: 'Total Rebounds', value: stats.rebounds, icon: '🔄' },
-    { label: 'Total Assists', value: stats.assists, icon: '🤝' },
-    { label: 'Total Steals', value: stats.steals, icon: '⚡' },
-    { label: 'Posts', value: stats.postsCount, icon: '📱' },
-    { label: 'Followers', value: stats.followersCount, icon: '👥' },
-    { label: 'Following', value: stats.followingCount, icon: '➡️' },
+    { label: 'Games Played', value: stats.gamesPlayed, icon: <Basketball size={24} className="text-orange-500" /> },
+    { label: 'Total Points', value: stats.points, icon: <Star size={24} className="text-orange-500" /> },
+    { label: 'Total Rebounds', value: stats.rebounds, icon: <RefreshCcw size={24} className="text-orange-500" /> },
+    { label: 'Total Assists', value: stats.assists, icon: <Handshake size={24} className="text-orange-500" /> },
+    { label: 'Total Steals', value: stats.steals, icon: <Zap size={24} className="text-orange-500" /> },
+    { label: 'Posts', value: stats.postsCount, icon: <Smartphone size={24} className="text-orange-500" /> },
+    { label: 'Followers', value: stats.followersCount, icon: <Users size={24} className="text-orange-500" /> },
+    { label: 'Following', value: stats.followingCount, icon: <ArrowRight size={24} className="text-orange-500" /> },
   ];
 
   return (
@@ -122,7 +123,7 @@ export default function Overview({ user }: OverviewProps) {
             key={index}
             className="bg-gray-50 rounded-lg p-4 text-center border border-gray-200"
           >
-            <div className="text-2xl mb-2">{stat.icon}</div>
+            <div className="mb-2 flex justify-center">{stat.icon}</div>
             <div className="text-2xl font-bold text-gray-900 mb-1">
               {stat.value.toLocaleString()}
             </div>

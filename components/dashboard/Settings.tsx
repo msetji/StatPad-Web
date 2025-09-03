@@ -10,16 +10,36 @@ interface SettingsProps {
 }
 
 export default function Settings({ user, onSignOut }: SettingsProps) {
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [bio, setBio] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const supabase = createClient();
 
   useEffect(() => {
-    if (user?.email) {
-      setEmail(user.email);
-    }
-  }, [user]);
+    const fetchUserProfile = async () => {
+      if (!user) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .select('name, username, bio')
+          .eq('id', user.id)
+          .single();
+
+        if (data) {
+          setName(data.name || '');
+          setUsername(data.username || '');
+          setBio(data.bio || '');
+        }
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [user, supabase]);
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,9 +47,15 @@ export default function Settings({ user, onSignOut }: SettingsProps) {
     setMessage('');
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        email: email
-      });
+      const { error } = await supabase
+        .from('users')
+        .upsert({
+          id: user?.id,
+          name: name.trim(),
+          username: username.trim().toLowerCase(),
+          bio: bio.trim(),
+          email: user?.email
+        });
 
       if (error) {
         setMessage(`Error: ${error.message}`);
@@ -43,26 +69,6 @@ export default function Settings({ user, onSignOut }: SettingsProps) {
     }
   };
 
-  const handleChangePassword = async () => {
-    setLoading(true);
-    setMessage('');
-
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
-
-      if (error) {
-        setMessage(`Error: ${error.message}`);
-      } else {
-        setMessage('Password reset email sent! Check your inbox.');
-      }
-    } catch (error) {
-      setMessage('An error occurred while sending the password reset email.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="p-6">
@@ -78,17 +84,60 @@ export default function Settings({ user, onSignOut }: SettingsProps) {
           
           <form onSubmit={handleUpdateProfile} className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter your full name"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                Username
+              </label>
+              <input
+                id="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Choose a unique username"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">
+                Bio
+              </label>
+              <textarea
+                id="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                placeholder="Tell us about yourself..."
+                maxLength={150}
+              />
+              <p className="text-sm text-gray-500 mt-1">{bio.length}/150 characters</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email Address
               </label>
               <input
-                id="email"
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
+                value={user?.email || ''}
+                disabled
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed"
               />
+              <p className="text-sm text-gray-500 mt-1">Email cannot be changed</p>
             </div>
 
             <button
@@ -99,23 +148,6 @@ export default function Settings({ user, onSignOut }: SettingsProps) {
               {loading ? 'Updating...' : 'Update Profile'}
             </button>
           </form>
-        </div>
-
-        {/* Password Settings */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Password</h2>
-          
-          <button
-            onClick={handleChangePassword}
-            disabled={loading}
-            className="w-full bg-yellow-600 text-white py-2 px-4 rounded-lg hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Sending...' : 'Reset Password'}
-          </button>
-          
-          <p className="text-sm text-gray-600 mt-2">
-            You'll receive an email with instructions to reset your password.
-          </p>
         </div>
 
         {/* Account Actions */}

@@ -4,13 +4,9 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase';
 import Button from '@/components/ui/button';
-import Input from '@/components/ui/input';
 
 export default function AuthPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const searchParams = useSearchParams();
   const supabase = createClient();
@@ -41,34 +37,8 @@ export default function AuthPage() {
     }
   }, [searchParams]);
 
-  const handleEmailAuth = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
-        if (error) throw error;
-        alert('Check your email for the confirmation link!');
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        if (error) throw error;
-        window.location.href = '/dashboard';
-      }
-    } catch (error: any) {
-      alert(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleGoogleAuth = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -78,10 +48,12 @@ export default function AuthPage() {
       });
       
       if (error) {
-        alert(error.message);
+        setErrorMessage(error.message);
       }
     } catch (err) {
-      alert('Authentication failed. Please try again.');
+      setErrorMessage('Authentication failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -90,66 +62,29 @@ export default function AuthPage() {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h2 className="text-3xl font-extrabold text-gray-900">
-            {isSignUp ? 'Create Account' : 'Sign in to StatPad'}
+            Sign in to StatPad
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             Access your basketball stats and highlights
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleEmailAuth}>
-          <div className="space-y-4">
-            <Input
-              type="email"
-              placeholder="Email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
+        <div className="mt-8 space-y-6">
           {errorMessage && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
               {errorMessage}
             </div>
           )}
 
-          <div className="space-y-4">
-            <Button 
-              type="submit" 
-              disabled={loading}
-              className="w-full"
-            >
-              {loading ? 'Loading...' : (isSignUp ? 'Sign Up' : 'Sign In')}
-            </Button>
-
-            <Button 
-              type="button"
-              variant="outline"
-              onClick={handleGoogleAuth}
-              className="w-full"
-            >
-              Continue with Google
-            </Button>
-          </div>
-
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-primary hover:underline"
-            >
-              {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
-            </button>
-          </div>
-        </form>
+          <Button 
+            type="button"
+            onClick={handleGoogleAuth}
+            disabled={loading}
+            className="w-full"
+          >
+            {loading ? 'Loading...' : 'Continue with Google'}
+          </Button>
+        </div>
       </div>
     </div>
   );

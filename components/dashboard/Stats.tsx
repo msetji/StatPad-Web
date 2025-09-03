@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase';
+import { Basketball, Star, RefreshCcw, Handshake, Zap, Lightbulb } from '@/components/icons';
 
 interface StatsProps {
   user: User | null;
@@ -92,18 +93,18 @@ export default function Stats({ user }: StatsProps) {
   }
 
   const totalStats = [
-    { label: 'Games Played', value: profile?.games_played || 0, icon: '🏀' },
-    { label: 'Total Points', value: profile?.total_points || 0, icon: '⭐' },
-    { label: 'Total Rebounds', value: profile?.total_rebounds || 0, icon: '🔄' },
-    { label: 'Total Assists', value: profile?.total_assists || 0, icon: '🤝' },
-    { label: 'Total Steals', value: profile?.total_steals || 0, icon: '⚡' },
+    { label: 'Games Played', value: profile?.games_played || 0, icon: <Basketball size={32} className="text-orange-500" /> },
+    { label: 'Total Points', value: profile?.total_points || 0, icon: <Star size={32} className="text-orange-500" /> },
+    { label: 'Total Rebounds', value: profile?.total_rebounds || 0, icon: <RefreshCcw size={32} className="text-orange-500" /> },
+    { label: 'Total Assists', value: profile?.total_assists || 0, icon: <Handshake size={32} className="text-orange-500" /> },
+    { label: 'Total Steals', value: profile?.total_steals || 0, icon: <Zap size={32} className="text-orange-500" /> },
   ];
 
   const avgStats = [
-    { label: 'Avg Points', value: profile?.avg_points || 0, icon: '⭐' },
-    { label: 'Avg Rebounds', value: profile?.avg_rebounds || 0, icon: '🔄' },
-    { label: 'Avg Assists', value: profile?.avg_assists || 0, icon: '🤝' },
-    { label: 'Avg Steals', value: profile?.avg_steals || 0, icon: '⚡' },
+    { label: 'Avg Points', value: profile?.avg_points || 0, icon: <Star size={32} className="text-orange-500" /> },
+    { label: 'Avg Rebounds', value: profile?.avg_rebounds || 0, icon: <RefreshCcw size={32} className="text-orange-500" /> },
+    { label: 'Avg Assists', value: profile?.avg_assists || 0, icon: <Handshake size={32} className="text-orange-500" /> },
+    { label: 'Avg Steals', value: profile?.avg_steals || 0, icon: <Zap size={32} className="text-orange-500" /> },
   ];
 
   return (
@@ -122,7 +123,7 @@ export default function Stats({ user }: StatsProps) {
               key={index}
               className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 text-center border border-blue-200"
             >
-              <div className="text-2xl mb-2">{stat.icon}</div>
+              <div className="mb-2 flex justify-center">{stat.icon}</div>
               <div className="text-2xl font-bold text-blue-900 mb-1">
                 {stat.value.toLocaleString()}
               </div>
@@ -141,7 +142,7 @@ export default function Stats({ user }: StatsProps) {
               key={index}
               className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 text-center border border-green-200"
             >
-              <div className="text-2xl mb-2">{stat.icon}</div>
+              <div className="mb-2 flex justify-center">{stat.icon}</div>
               <div className="text-2xl font-bold text-green-900 mb-1">
                 {stat.value.toFixed(1)}
               </div>
@@ -153,7 +154,10 @@ export default function Stats({ user }: StatsProps) {
 
       {/* Performance Insights */}
       <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-        <h3 className="font-semibold text-yellow-900 mb-2">💡 Performance Insights</h3>
+        <h3 className="font-semibold text-yellow-900 mb-2 flex items-center gap-2">
+          <Lightbulb size={20} className="text-orange-500" />
+          Performance Insights
+        </h3>
         <p className="text-yellow-700 text-sm">
           {profile?.games_played === 0 
             ? "Start tracking your games to see detailed statistics and insights!"

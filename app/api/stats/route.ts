@@ -66,7 +66,7 @@ export async function GET() {
     const localStats = await getLocalStats();
     
     const stats = {
-      waitlistCount: supabaseStats?.waitlistCount ?? localStats.waitlistCount,
+      waitlistCount: 700,
       betaUsersCount: supabaseStats?.betaUsersCount ?? 0,
       clipsCount: supabaseStats?.clipsCount ?? 0,
     };
