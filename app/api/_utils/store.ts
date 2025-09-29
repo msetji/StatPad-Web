@@ -51,7 +51,7 @@ async function appendToLocalFile(entry: object) {
 export async function addWaitlistEntry(entry: WaitlistEntry) {
   if (supabase) {
     try {
-      await supabase.from('waitlist').insert(entry);
+      await (supabase as any).from('waitlist').insert(entry);
       return;
     } catch (error) {
       console.error('Supabase insert error (waitlist):', error);
@@ -63,7 +63,7 @@ export async function addWaitlistEntry(entry: WaitlistEntry) {
 export async function addContactMessage(entry: ContactMessage) {
   if (supabase) {
     try {
-      await supabase.from('contact_messages').insert(entry);
+      await (supabase as any).from('contact_messages').insert(entry);
       return;
     } catch (error) {
       console.error('Supabase insert error (contact):', error);

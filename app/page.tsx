@@ -3,7 +3,7 @@ import Hero from '@/components/Hero';
 import FeatureCards from '@/components/FeatureCards';
 import ScreenshotCarousel from '@/components/ScreenshotCarousel';
 import StatsStrip from '@/components/StatsStrip';
-import WaitlistForm from '@/components/WaitlistForm';
+import AppStoreButton from '@/components/AppStoreButton';
 import ContactForm from '@/components/ContactForm';
 import FAQ from '@/components/FAQ';
 import Footer from '@/components/Footer';
@@ -16,7 +16,7 @@ export default function HomePage() {
       <FeatureCards />
       <ScreenshotCarousel />
       <StatsStrip />
-      <WaitlistForm />
+      <AppStoreButton />
       <ContactForm />
       <FAQ />
       <Footer />

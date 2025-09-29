@@ -5,28 +5,13 @@ interface EmailOptions {
 }
 
 async function sendEmail(options: EmailOptions) {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.log('email mock:', options);
-    return;
-  }
-  try {
-    await fetch('https://api.resend.com/v1/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        from: 'StatPad <noreply@thestatpad.com>',
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-      }),
-    });
-  } catch (error) {
-    console.error('Resend email error:', error);
-  }
+  // Email functionality disabled - using admin@thestatpad.com instead
+  console.log('Email would be sent:', {
+    to: options.to,
+    subject: options.subject,
+    from: 'admin@thestatpad.com'
+  });
+  // TODO: Implement direct email sending via admin@thestatpad.com
 }
 
 export async function sendWaitlistConfirmation(name: string, email: string) {
@@ -72,6 +57,6 @@ export async function sendWaitlistConfirmation(name: string, email: string) {
 export async function sendContactNotification(name: string, email: string, message: string) {
   const subject = 'New contact message from StatPad website';
   const html = `<p><strong>Name:</strong> ${name}<br/><strong>Email:</strong> ${email}</p><p>${message}</p>`;
-  // send to internal address
-  await sendEmail({ to: 'hello@thestatpad.com', subject, html });
+  // send to admin address
+  await sendEmail({ to: 'admin@thestatpad.com', subject, html });
 }

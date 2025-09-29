@@ -32,8 +32,8 @@ export default function StatsStrip() {
   }, []);
 
   const stats: Stat[] = [
-    { label: 'Players on Waitlist', value: realStats.waitlistCount },
-    { label: 'Beta Users', value: realStats.betaUsersCount },
+    { label: 'App Downloads', value: realStats.waitlistCount },
+    { label: 'Active Users', value: realStats.betaUsersCount },
     { label: 'Clips Shared', value: realStats.clipsCount },
   ];
 

@@ -18,11 +18,11 @@ export default function Hero() {
         Track your game with <span className="text-primary">StatPad</span>
       </h1>
       <p className="text-gray-600 max-w-2xl mb-8 text-lg">
-        StatPad makes it easy to capture your sports highlights, follow teammates and climb the leaderboards. Join our waitlist to get early access or reach out to learn more.
+        StatPad makes it easy to capture your sports highlights, follow teammates and climb the leaderboards. Download now on the App Store or reach out to learn more.
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#waitlist" className="no-underline">
-          <Button variant="default">Join Waitlist</Button>
+        <a href="https://apps.apple.com/us/app/statpad/id6749465010" target="_blank" rel="noopener noreferrer" className="no-underline">
+          <Button variant="default">Download Now</Button>
         </a>
         <a href="#contact" className="no-underline">
           <Button variant="outline">Contact Us</Button>

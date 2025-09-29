@@ -12,19 +12,19 @@ const items: AccordionItem[] = [
   },
   {
     id: '2',
-    title: 'How do I join the waitlist?',
+    title: 'How do I download StatPad?',
     content: (
       <p>
-        Simply fill out the waitlist form above with your name and email. We’ll notify you when the web app is ready!
+        StatPad is available now on the App Store! Click the download button above or visit the App Store to get started.
       </p>
     ),
   },
   {
     id: '3',
-    title: 'When will StatPad launch?',
+    title: 'Is StatPad available on other platforms?',
     content: (
       <p>
-        We’re working hard to launch the web version soon. Join the waitlist to be the first to know about our release timeline.
+        Currently, StatPad is available on iOS via the App Store. We're working on expanding to other platforms in the future.
       </p>
     ),
   },

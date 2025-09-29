@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 
 export const metadata: Metadata = {
   title: 'StatPad',
-  description: 'Track your game. Join the waitlist.',
+  description: 'Track your game. Download StatPad on the App Store.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

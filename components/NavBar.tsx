@@ -40,8 +40,8 @@ export default function NavBar() {
           <a href="#stats" className="text-gray-600 hover:text-primary transition-colors">
             Stats
           </a>
-          <a href="#waitlist" className="text-gray-600 hover:text-primary transition-colors">
-            Join Waitlist
+          <a href="https://apps.apple.com/us/app/statpad/id6749465010" target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-primary transition-colors">
+            Download App
           </a>
           <a href="#contact" className="text-gray-600 hover:text-primary transition-colors">
             Contact
