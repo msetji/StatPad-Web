@@ -5,13 +5,28 @@ interface EmailOptions {
 }
 
 async function sendEmail(options: EmailOptions) {
-  // Email functionality disabled - using admin@thestatpad.com instead
-  console.log('Email would be sent:', {
-    to: options.to,
-    subject: options.subject,
-    from: 'admin@thestatpad.com'
-  });
-  // TODO: Implement direct email sending via admin@thestatpad.com
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.log('email mock:', options);
+    return;
+  }
+  try {
+    await fetch('https://api.resend.com/v1/emails', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        from: 'StatPad <admin@thestatpad.com>',
+        to: options.to,
+        subject: options.subject,
+        html: options.html,
+      }),
+    });
+  } catch (error) {
+    console.error('Resend email error:', error);
+  }
 }
 
 export async function sendWaitlistConfirmation(name: string, email: string) {
