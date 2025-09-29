@@ -7,23 +7,55 @@ interface EmailOptions {
 async function sendEmail(options: EmailOptions) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.log('email mock:', options);
+    console.log('No Resend API key found, email mock:', options);
     return;
   }
+  
+  console.log('Sending email via Resend:', {
+    to: options.to,
+    subject: options.subject,
+    from: 'StatPad <admin@updates.thestatpad.com>'
+  });
+  
   try {
-    await fetch('https://api.resend.com/v1/emails', {
+    const requestBody = {
+      from: 'StatPad <onboarding@resend.dev>',
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+    };
+    
+    console.log('Resend API request details:', {
+      url: 'https://api.resend.com/v1/emails',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey.substring(0, 8)}...`
+      },
+      body: requestBody
+    });
+    
+    const response = await fetch('https://api.resend.com/v1/emails', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        from: 'StatPad <admin@thestatpad.com>',
-        to: options.to,
-        subject: options.subject,
-        html: options.html,
-      }),
+      body: JSON.stringify(requestBody),
     });
+    
+    const result = await response.json();
+    
+    if (!response.ok) {
+      console.error('Resend API error details:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        body: result
+      });
+    } else {
+      console.log('Email sent successfully:', result);
+    }
   } catch (error) {
     console.error('Resend email error:', error);
   }

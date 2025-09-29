@@ -4,7 +4,7 @@ import FeatureCards from '@/components/FeatureCards';
 import ScreenshotCarousel from '@/components/ScreenshotCarousel';
 import StatsStrip from '@/components/StatsStrip';
 import AppStoreButton from '@/components/AppStoreButton';
-import ContactForm from '@/components/ContactForm';
+import ContactSection from '@/components/ContactForm';
 import FAQ from '@/components/FAQ';
 import Footer from '@/components/Footer';
 
@@ -17,7 +17,7 @@ export default function HomePage() {
       <ScreenshotCarousel />
       <StatsStrip />
       <AppStoreButton />
-      <ContactForm />
+      <ContactSection />
       <FAQ />
       <Footer />
     </main>
